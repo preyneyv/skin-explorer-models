@@ -11,10 +11,10 @@ pool: Skin Explorer Model Agents
 steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: "3.10.5"
+      versionSpec: "3.10"
       addToPath: true
       architecture: "x64"
-    displayName: "Use Python 3.10.5"
+    displayName: "Use Python 3.10"
 
   - script: |
       python -m pip install --upgrade pip
@@ -24,5 +24,5 @@ steps:
   - task: PythonScript@0
     inputs:
       scriptSource: "filePath"
-      scriptPath: "fetch.py"
-    displayName: "Download League files"
+      scriptPath: "1-download-game-files.py"
+    displayName: "Download game files"

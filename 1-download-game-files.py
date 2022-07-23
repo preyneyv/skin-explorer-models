@@ -1,7 +1,8 @@
+import subprocess
 import urllib.request
 import requests
 
-# Download latest tools.
+# Download game files.
 urllib.request.urlretrieve(
     'https://github.com/Morilli/ManifestDownloader/releases/latest/download/ManifestDownloader.exe', 'ManifestDownloader.exe')
 
@@ -11,3 +12,4 @@ latest = sorted((x for x in d['releases'] if x['release']['labels']['riot:artifa
                 key=lambda x: tuple(map(int, x['compat_version']['id'].split('+')[0].split('.'))))[-1]
 print(latest['download']['url'])
  
+subprocess.run(['./ManifestDownloader.exe', latest['download']['url'], '-f' ,'"DATA/FINAL/Champions/.*wad\.client$"', '-t' ,'8' ,'--no-langs', '-o', 'game'])
