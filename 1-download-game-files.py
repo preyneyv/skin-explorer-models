@@ -11,5 +11,6 @@ d = requests.get(
 latest = sorted((x for x in d['releases'] if x['release']['labels']['riot:artifact_type_id']['values'][0] == 'lol-game-client'),
                 key=lambda x: tuple(map(int, x['compat_version']['id'].split('+')[0].split('.'))))[-1]
 print(latest['download']['url'])
- 
-subprocess.run(['./ManifestDownloader.exe', latest['download']['url'], '-f' ,'"DATA/FINAL/Champions/.*wad\.client$"', '-t' ,'8' ,'--no-langs', '-o', 'game'])
+
+subprocess.run(['./ManifestDownloader.exe', latest['download']['url'], '-f',
+               'DATA/FINAL/Champions/.*wad\.client$', '-t', '8', '--no-langs', '-o', 'game', '-v', '-v'])
