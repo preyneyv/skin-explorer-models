@@ -4,26 +4,25 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- main
+  - main
 
-pool:
-  vmImage: windows-2022
+pool: Skin Explorer Model Agents
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.10.5'
-    addToPath: true
-    architecture: 'x64'
-  displayName: 'Use Python 3.10.5'
-  
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.10.5"
+      addToPath: true
+      architecture: "x64"
+    displayName: "Use Python 3.10.5"
 
-- task: PythonScript@0
-  inputs:
-    scriptSource: 'filePath'
-    scriptPath: 'fetch.py'
-  displayName: 'Download League files'
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: "Install dependencies"
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: "filePath"
+      scriptPath: "fetch.py"
+    displayName: "Download League files"
