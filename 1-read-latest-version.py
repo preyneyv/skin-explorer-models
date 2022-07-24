@@ -1,10 +1,4 @@
-import subprocess
-import urllib.request
 import requests
-
-# Download game files.
-urllib.request.urlretrieve(
-    'https://github.com/Morilli/ManifestDownloader/releases/latest/download/ManifestDownloader.exe', 'ManifestDownloader.exe')
 
 d = requests.get(
     "https://sieve.services.riotcdn.net/api/v1/products/lol/version-sets/PBE1?q[platform]=windows").json()
@@ -12,6 +6,9 @@ latest = sorted((x for x in d['releases'] if x['release']['labels']['riot:artifa
                 key=lambda x: tuple(map(int, x['compat_version']['id'].split('+')[0].split('.'))))[-1]
 
 print(latest['download']['url'])
+print(latest['compat_version']['id'].split('+')[0])
 
-subprocess.run(['./ManifestDownloader.exe', latest['download']['url'], '-f',
-               'DATA/FINAL/Champions/.*wad\.client$', '-t', '8', '--no-langs', '-o', 'game', '-v'])
+print(
+    f"##vso[task.setvariable variable=game-files-version]{latest['compat_version']['id'].split('+')[0]}")
+print(
+    f"##vso[task.setvariable variable=game-files-manifest]{latest['download']['url']}")

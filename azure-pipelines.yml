@@ -1,12 +1,13 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
   - main
 
 pool: Skin Explorer Model Agents
+
+variables:
+  - name: game-files-version
+    value: ""
+  - name: game-files-manifest
+    value: ""
 
 steps:
   - task: UsePythonVersion@0
@@ -24,5 +25,11 @@ steps:
   - task: PythonScript@0
     inputs:
       scriptSource: "filePath"
-      scriptPath: "1-download-game-files.py"
+      scriptPath: "1-read-latest-version.py"
+    displayName: "Read latest (PBE) version"
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: "filePath"
+      scriptPath: "2-download-game-files.py"
     displayName: "Download game files"
