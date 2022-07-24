@@ -4,12 +4,25 @@ trigger:
 pool: Skin Explorer Model Agents
 
 variables:
-  - name: game-files-version
-    value: ""
-  - name: game-files-manifest
+  - group: skin-explorer-models
+  - name: GAME_FILES_MANIFEST
     value: ""
 
 steps:
+  - task: PowerShell@2
+    inputs:
+      targetType: "inline"
+      script: |
+        $connectTestResult = Test-NetConnection -ComputerName $(STORAGE_HOST) -Port 445
+        if ($connectTestResult.TcpTestSucceeded) {
+            # Save the password so the drive will persist on reboot
+            cmd.exe /C "cmdkey /add:`"$(STORAGE_HOST)`" /user:`"$(STORAGE_USER)`" /pass:`"$(STORAGE_PASS)`""
+            # Mount the drive
+            New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$(STORAGE_SHARE)" -Persist
+        } else {
+            Write-Error -Message "Unable to reach the Azure storage account via port 445. Check to make sure your organization or ISP is not blocking port 445, or use Azure P2S VPN, Azure S2S VPN, or Express Route to tunnel SMB traffic over a different port."
+        }
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "3.10"

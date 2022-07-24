@@ -5,10 +5,8 @@ d = requests.get(
 latest = sorted((x for x in d['releases'] if x['release']['labels']['riot:artifact_type_id']['values'][0] == 'lol-game-client'),
                 key=lambda x: tuple(map(int, x['compat_version']['id'].split('+')[0].split('.'))))[-1]
 
-print(latest['download']['url'])
-print(latest['compat_version']['id'].split('+')[0])
+print("Game version:", latest['compat_version']['id'].split('+')[0])
+print("Manifest URL:", latest['download']['url'])
 
 print(
-    f"##vso[task.setvariable variable=game-files-version]{latest['compat_version']['id'].split('+')[0]}")
-print(
-    f"##vso[task.setvariable variable=game-files-manifest]{latest['download']['url']}")
+    f"##vso[task.setvariable variable=GAME_FILES_PATH]{latest['download']['url']}")
