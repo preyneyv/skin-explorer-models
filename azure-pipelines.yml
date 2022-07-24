@@ -9,41 +9,42 @@ variables:
     value: ""
 
 steps:
-  - powershell: |
-      $connectTestResult = Test-NetConnection -ComputerName $(STORAGE_HOST) -Port 445
-      if ($connectTestResult.TcpTestSucceeded) {
-          cmd.exe /C "cmdkey /add:`"$(STORAGE_HOST)`" /user:`"$(STORAGE_USER)`" /pass:`"$(STORAGE_PASS)`""
-          Get-PSDrive | ForEach {
-            If ( $_.DisplayRoot -eq '$(STORAGE_SHARE)' ) {
-              Remove-PSDrive -Name $_.Name 
-            }
-          }
-          New-PSDrive -Name Z -PSProvider FileSystem -Root "$(STORAGE_SHARE)" -Persist
-      } else {
-          Write-Error -Message "Unable to reach the Azure storage account via port 445. Check to make sure your organization or ISP is not blocking port 445, or use Azure P2S VPN, Azure S2S VPN, or Express Route to tunnel SMB traffic over a different port."
-      }
-    displayName: Mount game files store.
+  - powershell: Remove-PSDrive -Name Z
+  # - powershell: |
+  #     $connectTestResult = Test-NetConnection -ComputerName $(STORAGE_HOST) -Port 445
+  #     if ($connectTestResult.TcpTestSucceeded) {
+  #         cmd.exe /C "cmdkey /add:`"$(STORAGE_HOST)`" /user:`"$(STORAGE_USER)`" /pass:`"$(STORAGE_PASS)`""
+  #         Get-PSDrive | ForEach {
+  #           If ( $_.DisplayRoot -eq `"$(STORAGE_SHARE)`" ) {
+  #             Remove-PSDrive -Name $_.Name
+  #           }
+  #         }
+  #         New-PSDrive -Name Z -PSProvider FileSystem -Root "$(STORAGE_SHARE)" -Persist
+  #     } else {
+  #         Write-Error -Message "Unable to reach the Azure storage account via port 445. Check to make sure your organization or ISP is not blocking port 445, or use Azure P2S VPN, Azure S2S VPN, or Express Route to tunnel SMB traffic over a different port."
+  #     }
+  #   displayName: Mount game files store.
 
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: "3.10"
-      addToPath: true
-      architecture: "x64"
-    displayName: "Use Python 3.10"
+  # - task: UsePythonVersion@0
+  #   inputs:
+  #     versionSpec: "3.10"
+  #     addToPath: true
+  #     architecture: "x64"
+  #   displayName: "Use Python 3.10"
 
-  - script: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-    displayName: "Install dependencies"
+  # - script: |
+  #     python -m pip install --upgrade pip
+  #     pip install -r requirements.txt
+  #   displayName: "Install dependencies"
 
-  - task: PythonScript@0
-    inputs:
-      scriptSource: "filePath"
-      scriptPath: "1-read-latest-version.py"
-    displayName: "Read latest (PBE) version"
+  # - task: PythonScript@0
+  #   inputs:
+  #     scriptSource: "filePath"
+  #     scriptPath: "1-read-latest-version.py"
+  #   displayName: "Read latest (PBE) version"
 
-  - task: PythonScript@0
-    inputs:
-      scriptSource: "filePath"
-      scriptPath: "2-download-game-files.py"
-    displayName: "Download game files"
+  # - task: PythonScript@0
+  #   inputs:
+  #     scriptSource: "filePath"
+  #     scriptPath: "2-download-game-files.py"
+  #   displayName: "Download game files"
