@@ -13,7 +13,7 @@ steps:
       $connectTestResult = Test-NetConnection -ComputerName $(STORAGE_HOST) -Port 445
       if ($connectTestResult.TcpTestSucceeded) {
           cmd.exe /C "cmdkey /add:`"$(STORAGE_HOST)`" /user:`"$(STORAGE_USER)`" /pass:`"$(STORAGE_PASS)`""
-          cmd.exe /C "net use * /delete"
+          cmd.exe /C "net use * /delete /y"
 
           New-PSDrive -Name Z -PSProvider FileSystem -Root "$(STORAGE_SHARE)" -Persist
       } else {
