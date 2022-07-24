@@ -10,6 +10,11 @@ variables:
 
 steps:
   - powershell: |
+      Get-PSDrive Z | Remove-PSDrive
+    errorActionPreference: silentlyContinue
+    displayName: Unmount existing
+
+  - powershell: |
       $connectTestResult = Test-NetConnection -ComputerName $(STORAGE_HOST) -Port 445
       if ($connectTestResult.TcpTestSucceeded) {
           # Save the password so the drive will persist on reboot
