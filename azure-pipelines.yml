@@ -10,16 +10,14 @@ variables:
 
 steps:
   - powershell: |
-      Get-PSDrive Z | Remove-PSDrive
-    errorActionPreference: silentlyContinue
-    displayName: Unmount existing
-
-  - powershell: |
       $connectTestResult = Test-NetConnection -ComputerName $(STORAGE_HOST) -Port 445
       if ($connectTestResult.TcpTestSucceeded) {
-          # Save the password so the drive will persist on reboot
           cmd.exe /C "cmdkey /add:`"$(STORAGE_HOST)`" /user:`"$(STORAGE_USER)`" /pass:`"$(STORAGE_PASS)`""
-          # Mount the drive
+          Get-PSDrive | ForEach {
+            If ( $_.DisplayRoot -eq '$(STORAGE_SHARE)' ) {
+              Remove-PSDrive -Name $_.Name 
+            }
+          }
           New-PSDrive -Name Z -PSProvider FileSystem -Root "$(STORAGE_SHARE)" -Persist
       } else {
           Write-Error -Message "Unable to reach the Azure storage account via port 445. Check to make sure your organization or ISP is not blocking port 445, or use Azure P2S VPN, Azure S2S VPN, or Express Route to tunnel SMB traffic over a different port."
