@@ -14,7 +14,7 @@ steps:
       if ($connectTestResult.TcpTestSucceeded) {
           cmd.exe /C "cmdkey /add:`"$(STORAGE_HOST)`" /user:`"$(STORAGE_USER)`" /pass:`"$(STORAGE_PASS)`""
           Get-PSDrive | ForEach {
-            If ( $_.DisplayRoot -eq `"$(STORAGE_SHARE)`" ) {
+            If ( $_.DisplayRoot -eq "$(STORAGE_SHARE)" ) {
               Remove-PSDrive -Name $_.Name 
             }
           }
