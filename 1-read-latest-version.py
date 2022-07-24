@@ -9,4 +9,4 @@ print("Game version:", latest['compat_version']['id'].split('+')[0])
 print("Manifest URL:", latest['download']['url'])
 
 print(
-    f"##vso[task.setvariable variable=GAME_FILES_PATH]{latest['download']['url']}")
+    f"##vso[task.setvariable variable=GAME_FILES_MANIFEST]{latest['download']['url']}")
