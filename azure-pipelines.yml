@@ -37,11 +37,5 @@ steps:
   - task: PythonScript@0
     inputs:
       scriptSource: "filePath"
-      scriptPath: "1-read-latest-version.py"
-    displayName: "Read latest (PBE) version"
-
-  - task: PythonScript@0
-    inputs:
-      scriptSource: "filePath"
-      scriptPath: "2-download-game-files.py"
-    displayName: "Download game files"
+      scriptPath: "1-download-game-files.py"
+    displayName: "Download game files and extract models"
